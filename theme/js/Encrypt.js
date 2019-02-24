@@ -199,7 +199,6 @@ Encrypt = {
 	  {
 		  return safeAdd(rotateLeft(safeAdd(a, safeAdd(safeAdd(i(b, c, d), x), ac)), s), b);
 	  }
-	  return false;
   },
 
   sha1: function (str)

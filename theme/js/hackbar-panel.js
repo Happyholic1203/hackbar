@@ -141,8 +141,8 @@ function loadUrl() {
 
 function splitUrl(){
 	var uri = currentFocusField.val();
-	uri = uri.replace(new RegExp(/&/g), "\n&");
-	uri = uri.replace(new RegExp(/\?/g), "\n?");
+	uri = uri.replace(new RegExp(/\n*&/g), "\n&");
+	uri = uri.replace(new RegExp(/\n*\?/g), "\n?");
 	currentFocusField.val(uri);
 	return true;
 }
@@ -266,7 +266,7 @@ function onclickMenu(action){
 		case 'url_encode':
 		getSelectedText(function(txt){
 			if(txt){
-				newString = Encrypt.urlEncode(txt);
+				newString = urlEncode(txt);
 				this.setSelectedText(newString);
 			}
 		});
@@ -274,7 +274,7 @@ function onclickMenu(action){
 		case 'url_decode':
 		getSelectedText(function(txt){
 			if(txt){
-				newString = Encrypt.unescape(txt);
+				newString = decodeURIComponent(txt);
 				this.setSelectedText(newString);
 			}
 		});
@@ -436,9 +436,45 @@ referrerField.bind('click', onFocusListener, false);
 userAgentField.bind('click', onFocusListener, false);
 cookieField.bind('click', onFocusListener, false);
 
+
+// In MacOS, event.altKey is set when *outside* of textarea.
+// It won't be set while in textarea.
+// We want the shortcuts to apply in a wider range, i.e. inside or outside of textarea
+function handleShortcutsForMacOS(event) {
+	console.log(event.charCode);
+	switch(event.charCode) {
+		case 229: // å: MacOS alt + a
+		loadUrl(); break;
+		case 8776:  // ≈: MacOS alt + x
+		execute(); break;
+		case 223: // ß: MacOS alt + s
+		splitUrl(); break;
+		case 180: // ´: MacOS alt + E
+		onclickMenu('url_encode'); break;
+		case 206: // Î: MacOS alt + D
+		onclickMenu('url_decode'); break;
+		default:
+		return;  // not a MacOS shortcut
+	}
+	event.preventDefault(); // MacOS shortcut hit: do not propagate
+}
+
 // Keyboard listener
 $(document).keypress(function(event){
-	if ('key' in event && event.altKey) {
+	if(event.ctrlKey){
+		switch(event.charCode){
+			case 97:
+			loadUrl(); break;
+			case 0:
+			execute(); break;
+			case 122:
+			undo(); break;
+			default:
+			return;
+		}
+	}
+
+	if (event.altKey) {
 		switch(event.charCode){
 			case 97: // a
 			loadUrl();
@@ -446,31 +482,22 @@ $(document).keypress(function(event){
 			case 120: // x
 			execute();
 			break;
-			case 112: //p
+			case 115: // s
 			splitUrl()
 			break;
-			case 117: //u
+			case 69: // E
 			onclickMenu('url_encode');
 			break;
-			case 85: //U
+			case 68: // D
 			onclickMenu('url_decode');
 			break;
-			case 99: //c
-			onclickMenu('base64_encode');
-			break;
-			case 67: //C
-			onclickMenu('base64_decode');
-			break;
+			default:
+			// outside of textarea
+			handleShortcutsForMacOS(event);
 		}
+		return;
 	}
-	if('key' in event && event.ctrlKey){
-		switch(event.charCode){
-			case 0:
-				execute();
-			break
-			case 122:
-				undo();
-			break;
-		}
-	}
+
+	// inside of textarea: altKey is not set
+	handleShortcutsForMacOS(event);
 });

@@ -10,12 +10,10 @@ A HackBar for new firefox (Firefox Quantum). This addon is writed in webextensio
 * Tools: md5, sha1, sha256, rot13 encryption, url, base64 encoding, beautifier json data.
 # Shortcut #
 * Load URL: alt + a
-* Split url: alt + p
+* Split url: alt + s
 * Execute: alt + x
-* Base64 Encode: alt + c
-* Base64 Decode: alt + C
-* Url Encode: alt + u
-* Url Decode: alt + U
+* Url Encode: alt + E
+* Url Decode: alt + D
 * with multipart post, you need edit boundary to "boundary", example
 --boundary
 Content-Disposition: form-data; name="fileToUpload"; filename="test.txt"
