@@ -2,7 +2,7 @@
 	"description": "A HackBar for new firefox (Firefox Quantum). This addon is written in webextension and alternatives to the XUL version of original Hackbar.",
 	"manifest_version": 2,
 	"name": "HackBar",
-	"version": "2.1.1",
+	"version": "2.2.0",
 	"author": "Khoiasd",
 	"homepage_url": "https://github.com/khoiasd/hackbar",
 	"icons": {
